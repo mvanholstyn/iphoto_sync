@@ -1,12 +1,12 @@
 #!/usr/local/bin/macruby
 
-REFRESH_ALL_DATA = false
+REFRESH_ALL_DATA = true
 
 framework 'Foundation'
 framework 'ScriptingBridge'
 
 iphoto = SBApplication.applicationWithBundleIdentifier("com.apple.iphoto")
-load_bridge_support_file 'iPhoto.bridgesupport'
+# load_bridge_support_file 'iPhoto.bridgesupport'
 
 photosAlbum = iphoto.photoLibraryAlbum
 
@@ -24,9 +24,12 @@ photo_data = db["photo_data"]
 
 if (REFRESH_ALL_DATA) then
   photosAlbum.photos.each do |photo|
-    doc = { iphoto_id: photo.id, name: String.new(photo.name), longitude: photo.longitude, latitude: photo.latitude, altitude: photo.altitude,
-      height: photo.height, width: photo.width, comment: String.new(photo.comment), date: photo.date.utc, imagePath: String.new(photo.imagePath), }
+    doc = {
+      iphoto_id: photo.id, name: String.new(photo.name), comment: String.new(photo.comment), date: photo.date.utc, 
+      longitude: photo.longitude, latitude: photo.latitude, altitude: photo.altitude,
+      height: photo.height, width: photo.width, imagePath: String.new(photo.imagePath), }
     photo_data.insert(doc)
+    puts photo.name.to_s
   end
 end
 
